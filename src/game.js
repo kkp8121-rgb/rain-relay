@@ -86,6 +86,9 @@ export function hint(run) {
   });
   run.events = [];
   if (missing) { run.hintsUsed += 1; event(run, 'hint', { x: missing.x, z: missing.z }, '다음 물길 조각의 위치를 표시했습니다.'); return { ...missing }; }
+  const solutionKeys = new Set(level.solution.map((item) => `${item.x},${item.z}`));
+  const extra = run.board.find((item) => item && !item.fixed && !solutionKeys.has(`${item.x},${item.z}`));
+  if (extra) { run.hintsUsed += 1; event(run, 'hint', { x: extra.x, z: extra.z }, `여분 관이 ${extra.x + 1}, ${extra.z + 1}칸에 있습니다. Backspace로 제거하십시오.`); return { ...extra, extra: true }; }
   event(run, 'hint', {}, '모든 해답 조각이 맞습니다. 수집기의 연결을 확인하십시오.'); return null;
 }
 

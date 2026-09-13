@@ -160,6 +160,16 @@ test('hint observes without editing and restart preserves constructed network', 
   assert.equal(run.status, 'edit'); assert.equal(JSON.stringify(run.board), network); assert.equal(run.cost, cost); assert.equal(run.hintsUsed, 1);
 });
 
+test('hint identifies an extra pipe after the authored pieces are complete', () => {
+  const run = createLevel('first-dew'); installSolution(run);
+  assert.equal(edit(run, { type: 'place', x: 0, z: 0, kind: 'straight', rot: 0 }), true);
+  const beforeHints = run.hintsUsed;
+  const extra = hint(run);
+  assert.deepEqual(extra, { x: 0, z: 0, kind: 'straight', rot: 0, fixed: false, extra: true });
+  assert.equal(run.hintsUsed, beforeHints + 1);
+  assert.match(run.feedback, /Backspace/);
+});
+
 test('failed retry resets runtime but keeps board and terminal won is inert', () => {
   const run = createLevel('first-dew'); installSolution(run); start(run); run.status = 'failed'; run.leaks = 3; const board = JSON.stringify(run.board); assert.equal(start(run), true); assert.equal(run.status, 'running'); assert.equal(run.leaks, 0); assert.equal(JSON.stringify(run.board), board);
   run.status = 'won'; const snapshot = JSON.stringify(run); step(run, .25); assert.equal(JSON.stringify(run), snapshot);

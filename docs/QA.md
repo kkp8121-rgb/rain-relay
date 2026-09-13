@@ -51,10 +51,14 @@ Last garden, complete network, 300 or more observed play frames per sample:
 
 Renderer identities came from Chromium's GPU information, not from launch flags alone. Hardware rendered 331 calls / 25,772 triangles including shadows; software rendered 194 calls / 16,994 triangles. Timing samples describe this machine and are not universal performance guarantees.
 
+## Bounded regression pass — 2026-09-13
+
+Separate from the earlier release measurements: `npm test` passed 18 tests; `npm run test:browser` passed direct-file and subpath runs; `npm run test:interaction` passed 10 scenarios. Extra-pipe hints now increment `hintsUsed` by one, and the UI tells the player to select the marked cell before using Remove or Backspace. New captures are in ignored `artifacts/file-title.png`, `artifacts/file-edit.png`, `artifacts/interaction-portrait.png` and `artifacts/interaction-landscape.png`.
+
 ## Package and repository
 
 `npm run pack` and `npm run test:package` passed. The ZIP is **745,183 bytes**, contains **8 relative entries**, and each decompressed entry matches the built local file by SHA-256. `game.js` is **624,333 bytes**. Entry names and cases are checked explicitly, including root `index.html`, `.nojekyll`, both WebP files, favicon and Three.js license.
 
 Credential-pattern scans produced no matching authored files. All 15 original game repositories were freshly checked clean. They were not modified.
 
-Public push and actual Pages verification require the separate user approval for this release. The completed local and subdirectory checks do not claim a live Pages deployment before that approval.
+Play at https://kkp8121-rgb.github.io/rain-relay/. Publication evidence is generated separately in ignored `artifacts/improvement-publication.json` after checking the deployed commit and asset hashes. The revised ZIP is 745,426 bytes with eight hash-matched entries; the package sizes above describe the original release.

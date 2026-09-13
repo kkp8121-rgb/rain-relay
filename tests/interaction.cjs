@@ -214,6 +214,17 @@ async function fixtureStorage(page, settings, records) {
     result.observed = { cost: state.run.cost, status: state.run.status, screen: state.screen };
   });
 
+  await scenario('extra-hint-select-and-remove', {}, async (env, result) => {
+    const { page } = env; await ready(page, env.url); await begin(page);
+    for (const x of [1, 2, 3, 4, 5]) await place(page, { x, z: 3, kind: 'straight', rot: 1 });
+    await place(page, { x: 0, z: 0, kind: 'straight', rot: 0 });
+    await page.keyboard.press('h'); await frames(page, 1);
+    assert.equal((await snapshot(page)).run.hintsUsed, 1, 'extra-pipe hint increments hintsUsed');
+    await moveTo(page, 0, 0); await page.keyboard.press('Backspace'); await frames(page, 1);
+    assert.equal((await snapshot(page)).run.board[0], null, 'marked extra pipe is removed after selecting its cell');
+    result.observed = { hintsUsed: (await snapshot(page)).run.hintsUsed, extraRemoved: true };
+  });
+
   await scenario('storage-invalid', {}, async (env, result) => {
     await fixtureStorage(env.page, '{bad-json', JSON.stringify({ unknown: { cost: 1 }, 'first-dew': { grade: 'S', cost: -1, leaks: 0, hintsUsed: 0, elapsed: 2 } }));
     await ready(env.page, env.url);
